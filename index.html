@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#10243a">
+
+  <title>Credenciamento | 7ª SEMAJUR</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <header>
+    <div class="header-content">
+      <div class="event-label">7ª SEMAJUR</div>
+      <h1>Credenciamento de Participantes</h1>
+      <p>Registro de presença nas atividades do evento</p>
+    </div>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>Registrar presença</h2>
+
+      <p class="description">
+        Preencha seus dados e permita o acesso à localização
+        do dispositivo para realizar o registro de presença.
+      </p>
+
+      <div id="message" class="message" role="status" aria-live="polite"></div>
+
+      <form id="attendanceForm">
+
+        <div class="form-group">
+          <label for="nome">Nome completo</label>
+          <input
+            type="text"
+            id="nome"
+            name="nome"
+            placeholder="Digite seu nome completo"
+            autocomplete="name"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="cpf">CPF ou número de inscrição</label>
+          <input
+            type="text"
+            id="cpf"
+            name="cpf"
+            placeholder="Digite seu CPF ou inscrição"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="atividade">Atividade</label>
+          <select id="atividade" name="atividade" required>
+            <option value="">Selecione uma atividade</option>
+            <option value="Palestra Abertura">Palestra de Abertura</option>
+            <option value="Minicurso 01">Minicurso 01</option>
+            <option value="Minicurso 02">Minicurso 02</option>
+            <option value="Palestra Encerramento">Palestra de Encerramento</option>
+          </select>
+        </div>
+
+        <div class="location-box">
+          <div class="location-title">Verificação de localização</div>
+
+          <p class="location-description">
+            Sua localização será utilizada para verificar
+            se você está próximo ao local do evento.
+            Ao continuar, permita o acesso ao GPS do dispositivo.
+          </p>
+
+          <div id="locationStatus" class="location-status">
+            Aguardando solicitação de localização.
+          </div>
+        </div>
+
+        <button type="submit" id="submitButton">
+          Registrar presença
+        </button>
+
+      </form>
+
+      <p class="privacy">
+        Os dados informados serão utilizados para o controle
+        de presença nas atividades da 7ª SEMAJUR.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    7ª SEMAJUR — Sistema de registro de presença
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
