@@ -78,28 +78,48 @@ function getLocation() {
     });
 }
 
-async function sendData(data) {
-  const response = await fetch(SCRIPT_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "text/plain;charset=utf-8"
-    },
-    body: JSON.stringify(data)
+function sendData(data) {
+  return new Promise((resolve, reject) => {
+    const cbName = "cb_" + Date.now() + "_" + Math.floor(Math.random() * 1e6);
+    const script = document.createElement("script");
+
+    const timer = setTimeout(() => {
+      cleanup();
+      reject(new Error("O servidor não respondeu. Tente novamente."));
+    }, 20000);
+
+    function cleanup() {
+      clearTimeout(timer);
+      delete window[cbName];
+      script.remove();
+    }
+
+    window[cbName] = (result) => {
+      cleanup();
+      if (result && result.sucesso) resolve(result);
+      else reject(new Error((result && result.mensagem) || "O servidor não registrou a presença."));
+    };
+
+    script.onerror = () => {
+      cleanup();
+      reject(new Error("Falha de comunicação com o servidor."));
+    };
+
+    const params = new URLSearchParams({
+      acao: "registrar",
+      callback: cbName,
+      nome: data.nome,
+      cpf: data.cpf,
+      atividade: data.atividade,
+      lat: data.lat,
+      lng: data.lng,
+      accuracy: data.accuracy
+    });
+
+    script.src = SCRIPT_URL + "?" + params.toString();
+    document.body.appendChild(script);
   });
-
-  if (!response.ok) {
-    throw new Error("Falha de comunicação com o servidor (" + response.status + ").");
-  }
-
-  const result = await response.json();
-
-  if (!result.sucesso) {
-    throw new Error(result.mensagem || "O servidor não registrou a presença.");
-  }
-
-  return result;
 }
-
 form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
