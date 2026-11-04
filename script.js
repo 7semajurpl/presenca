@@ -1,6 +1,6 @@
 // URL da API do Google Apps Script
 const SCRIPT_URL =
-    "https://script.google.com/macros/s/AKfycbzZuELZ7L9Y5_GWIOAAnTlR8H1uTkt3MARZlm2kw1tGSNUliGS45XX6jC9VzEoNdXeY6Q/exec";
+    "https://script.google.com/macros/s/AKfycbze5aTshdf41GOGpHzEp4WqUIP4VoReDLvr3CPRz4EionFb1lRMn5m5R7nHBH-OQ8I2rQ/exec";
 
 const form = document.getElementById("attendanceForm");
 const submitButton = document.getElementById("submitButton");
@@ -120,6 +120,7 @@ function sendData(data) {
     document.body.appendChild(script);
   });
 }
+
 form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
