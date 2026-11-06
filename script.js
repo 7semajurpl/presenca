@@ -1,11 +1,75 @@
 // URL da API do Google Apps Script
 const SCRIPT_URL =
-    "https://script.google.com/macros/s/AKfycbze5aTshdf41GOGpHzEp4WqUIP4VoReDLvr3CPRz4EionFb1lRMn5m5R7nHBH-OQ8I2rQ/exec";
+    "https://script.google.com/macros/s/AKfycbx_3texQyRTye0FGPu07ycwqbeVXBZSeovL5WNLiwSClHPc-h3_VEfUxm7tSuF3_b0EyA/exec";
 
 const form = document.getElementById("attendanceForm");
 const submitButton = document.getElementById("submitButton");
 const message = document.getElementById("message");
 const locationStatus = document.getElementById("locationStatus");
+const activitySelect = document.getElementById("atividade");
+const activityStatus = document.getElementById("activityStatus");
+
+const EVENT_TIME_ZONE = "America/Cuiaba";
+const ACTIVITIES_BY_DAY = {
+    "09/11": [
+        "Mesa de Autoridades",
+        "Palestra de Abertura",
+        "Painel I - Rede de Enfrentamento"
+    ],
+    "10/11": [
+        "Minicurso 1",
+        "Minicurso 2"
+    ],
+    "11/11": [
+        "Apresentação de Banners",
+        "Feira de Empreendedorismo Feminino",
+        "Aula de Defesa Pessoal"
+    ],
+    "12/11": [
+        "Minicurso 3",
+        "Minicurso 4"
+    ],
+    "13/11": [
+        "Painel II: Mulheres em Espaços de Poder",
+        "Painel III: O Papel do Homem na Defesa da Mulher",
+        "Palestra de Encerramento"
+    ]
+};
+
+function getTodayKey() {
+    return new Intl.DateTimeFormat("pt-BR", {
+        timeZone: EVENT_TIME_ZONE,
+        day: "2-digit",
+        month: "2-digit"
+    }).format(new Date());
+}
+
+function loadTodayActivities() {
+    const today = getTodayKey();
+    const activities = ACTIVITIES_BY_DAY[today] || [];
+    const placeholder = document.createElement("option");
+
+    placeholder.value = "";
+    placeholder.textContent = activities.length
+        ? "Selecione uma atividade"
+        : "Nenhuma atividade disponível hoje";
+    activitySelect.replaceChildren(placeholder);
+
+    activities.forEach((activity) => {
+        const option = document.createElement("option");
+        option.value = activity;
+        option.textContent = activity;
+        activitySelect.appendChild(option);
+    });
+
+    activitySelect.disabled = activities.length === 0;
+    activityStatus.textContent = activities.length
+        ? "Exibindo as atividades de " + today + "."
+        : "Não há atividades programadas para hoje.";
+    submitButton.disabled = activities.length === 0;
+}
+
+loadTodayActivities();
 
 function showMessage(text, type) {
     message.textContent = text;
@@ -13,7 +77,7 @@ function showMessage(text, type) {
 }
 
 function setLoading(loading) {
-    submitButton.disabled = loading;
+    submitButton.disabled = loading || activitySelect.disabled;
     submitButton.textContent = loading
     ? "Enviando registro..."
     : "Registrar presença";
@@ -136,6 +200,11 @@ form.addEventListener("submit", async (event) => {
         "Preencha todos os campos antes de continuar.",
         "error"
     );
+    return;
+    }
+
+    if (activitySelect.disabled) {
+    showMessage("Não há atividades disponíveis para inscrição hoje.", "error");
     return;
     }
 
