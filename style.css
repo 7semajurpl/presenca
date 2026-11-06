@@ -115,8 +115,20 @@ select:focus {
     border-color: var(--navy-light);
 }
 
+select:disabled {
+    background: #f3f5f8;
+    color: var(--muted);
+    cursor: not-allowed;
+}
+
 input::placeholder {
     color: #a0aab5;
+}
+
+.activity-status {
+    margin-top: 7px;
+    color: var(--muted);
+    font-size: 12px;
 }
 
 .location-box {
